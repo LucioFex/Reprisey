@@ -7,8 +7,9 @@ const rentalsDefault: IRentalsDefault = {
         'mercado-libre',
         'remax',
         'zonaprop',
-        'inmoclick'
+        'inmoclick',
     ],
-}
+};
 
+// eslint-disable-next-line import/prefer-default-export
 export { rentalsDefault };

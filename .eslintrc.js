@@ -16,5 +16,6 @@ module.exports = {
         'import/no-unresolved': 'off',
         'consistent-return': 'off',
         'no-restricted-globals': 'off',
+        'import/extensions': 'off',
     },
 };

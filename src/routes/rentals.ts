@@ -21,7 +21,7 @@ router.get("/remax", (req: Request, res: Response) => {
 
 router.get("/zonaprop", (req: Request, res: Response) => {
     // TO DO
-})
+});
 
 router.get("/inmoclick", (req: Request, res: Response) => {
     // TO DO

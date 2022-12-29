@@ -1,0 +1,20 @@
+module.exports = {
+    extends: ['airbnb-base'],
+    parser: '@typescript-eslint/parser',
+    plugins: ['@typescript-eslint'],
+    root: true,
+    rules: {
+        'no-console': 'warn',
+        indent: ['warn', 4],
+        'linebreak-style': ['off', 'windows'],
+        'no-continue': 'off',
+        radix: 'off',
+        'no-constant-condition': 'off',
+        'no-param-reassign': 'off',
+        'import/no-dynamic-require': 'off',
+        'global-require': 'off',
+        'import/no-unresolved': 'off',
+        'consistent-return': 'off',
+        'no-restricted-globals': 'off',
+    },
+};

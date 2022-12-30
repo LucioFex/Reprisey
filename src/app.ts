@@ -1,9 +1,8 @@
-import express, { Express, Request, Response } from 'express';
-import router from './routes/index';
+import express, { Express } from 'express';
 import dotenv from 'dotenv';
-dotenv.config();
+import router from './routes/index';
 
-'use strict';
+dotenv.config();
 
 // Initialization of app and main port
 const app: Express = express();
@@ -14,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Routing
-app.use("/", router);
+app.use('/', router);
 
 app.listen(app.get('port'), () => {
     console.log('App running in the port:', app.get('port'));

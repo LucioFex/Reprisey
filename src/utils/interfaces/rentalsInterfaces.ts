@@ -15,4 +15,6 @@ interface IArgenpropData {
     bedrooms?: number;
 }
 
-export { IRentalsDefault, IArgenpropData };
+type IArgenpropFunc = IArgenpropData[] | unknown;
+
+export { IRentalsDefault, IArgenpropData, IArgenpropFunc };

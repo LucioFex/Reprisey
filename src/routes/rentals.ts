@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
+import { IArgenpropFunc } from '../utils/interfaces/rentalsInterfaces';
 import rentalsDefault from '../services/rentals/rentals';
-import argenprop from '../services/rentals/argenprop';
+import argenpropSearch from '../services/rentals/argenprop';
 
 const router: Router = Router({ strict: true });
 
@@ -12,7 +13,7 @@ router.get('/argenprop/:location', (req: Request, res: Response) => {
     const { location } = req.params;
     const { query } = req;
 
-    const argenpropData: IArgenpropData[] = argenprop(location, query);
+    const argenpropData: Promise<IArgenpropFunc> = argenpropSearch(location, query);
     res.status(200).json(argenpropData);
 });
 

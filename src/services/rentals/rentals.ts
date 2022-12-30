@@ -11,5 +11,4 @@ const rentalsDefault: IRentalsDefault = {
     ],
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { rentalsDefault };
+export default rentalsDefault;

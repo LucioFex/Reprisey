@@ -3,5 +3,16 @@ interface IRentalsDefault {
     availableWebsites: string[];
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export { IRentalsDefault };
+interface IArgenpropData {
+    location?: string;
+    description?: string;
+    imgs?: string[];
+    price?: number;
+    expenses?: number;
+    environments?: number;
+    bathrooms?: number;
+    antiquity?: number;
+    bedrooms?: number;
+}
+
+export { IRentalsDefault, IArgenpropData };

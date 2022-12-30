@@ -1,7 +1,17 @@
 module.exports = {
-    extends: ['airbnb-base'],
+    extends: [
+        'airbnb-base',
+        'airbnb-typescript',
+        'plugin:@typescript-eslint/recommended',
+    ],
     parser: '@typescript-eslint/parser',
     plugins: ['@typescript-eslint'],
+    parserOptions: {
+        ecmaVersion: 2020,
+        project: 'tsconfig.json',
+        tsconfigRootDir: __dirname,
+        sourceType: 'module',
+    },
     root: true,
     rules: {
         'no-console': 'warn',
@@ -17,5 +27,7 @@ module.exports = {
         'consistent-return': 'off',
         'no-restricted-globals': 'off',
         'import/extensions': 'off',
+        '@typescript-eslint/indent': 'off',
+        'react/jsx-filename-extension': 'off',
     },
 };

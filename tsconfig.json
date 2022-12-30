@@ -6,6 +6,6 @@
     "sourceMap": true,
     "outDir": "dist",
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", ".eslint.js"],
   "exclude": ["node_modules"]
 }

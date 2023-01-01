@@ -17,6 +17,7 @@ router.get('/argenprop/:location', async (req: Request, res: Response) => {
         const argenpropData: IArgenpropData[] | undefined = await argenpropSearch(location, query);
         res.status(200).json(argenpropData);
     } catch (err: unknown) {
+        // eslint-disable-next-line no-console
         console.error(err);
         res.status(404).json({ err: 'Can\' access to Argenprop API' });
     }

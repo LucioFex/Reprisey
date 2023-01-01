@@ -4,7 +4,7 @@ import { IArgenpropData, ObjectStNu } from '../../types';
 
 const websiteSeachApi = async (location: string): Promise<ObjectStNu> => {
     /* Returns Argenprop API result recommendations Object after manual search */
-    const url: string = `https://api.sosiva451.com/Ubicaciones/buscar?stringBusqueda=${location}`;
+    const url = `https://api.sosiva451.com/Ubicaciones/buscar?stringBusqueda=${location}`;
     const apiFetch = axios.get(url, { headers: { 'Accept-Encoding': 'gzip,deflate,compress' } });
     return (await apiFetch).data[0].value;
 };
@@ -20,22 +20,21 @@ const zoneFormatter = (zoneData: ObjectStNu): string[] => {
     return [zoneType, zoneName];
 };
 
-const getRentalsInZone = async (zoneType: string, zoneName: string): Promise<IArgenpropData[]> => {
+const getRentalsInZone = async (zoneType: string, zoneName: string): Promise<string[]> => {
     /* Fetch of rentals in the zone selected */
     const url = `https://www.argenprop.com/departamento-alquiler-${zoneType}-${zoneName}`;
     const fetchDom = await axios.get(url, { headers: { 'Accept-Encoding': 'gzip,deflate,compress' } });
 
-    const { data }: { data: IArgenpropData[] } = fetchDom;
-    console.log(data);
+    const { data }: { data: string[] } = fetchDom;
     return data;
 };
 
 const getArgenprop = async (location: string, query: ObjectStNu): Promise<IArgenpropData[]> => {
     const value: ObjectStNu = await websiteSeachApi(location);
     const [zoneType, zoneName]: string[] = zoneFormatter(value);
-    const apiData = getRentalsInZone(zoneType, zoneName);
+    const rawDomData: string[] = await getRentalsInZone(zoneType, zoneName); // To Do
 
-    return apiData; // Error
+    return [{ location: 'sample' }];
 };
 
 export default getArgenprop;

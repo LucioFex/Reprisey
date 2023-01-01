@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { IArgenpropFunc } from '../utils/interfaces/rentalsInterfaces';
+import { IArgenpropFunc, ObjectStNu } from '../types';
 import rentalsDefault from '../services/rentals/rentals';
 import argenpropSearch from '../services/rentals/argenprop';
 
@@ -8,13 +8,17 @@ const router: Router = Router({ strict: true });
 // Absolute url: /rentals/...
 router.get('/', (req: Request, res: Response) => res.status(200).json(rentalsDefault));
 
-router.get('/argenprop/:location', (req: Request, res: Response) => {
+router.get('/argenprop/:location', async (req: Request, res: Response) => {
     // Rental location and filters (query)
     const { location } = req.params;
-    const { query } = req;
+    const query: ObjectStNu = req.query as ObjectStNu;
 
-    const argenpropData: Promise<IArgenpropFunc> = argenpropSearch(location, query);
-    res.status(200).json(argenpropData);
+    try {
+        const argenpropData: IArgenpropFunc = await argenpropSearch(location, query);
+        res.status(200).json(argenpropData);
+    } catch (err: unknown) {
+        res.status(404).json({ err: 'Can\' access to Argenprop API' });
+    }
 });
 
 // router.get('/mercado-libre', (req: Request, res: Response) => {

@@ -1,26 +1,26 @@
 // import cheerio from 'cheerio';
 import axios from 'axios';
-import { IArgenpropFunc } from '../../utils/interfaces/rentalsInterfaces';
+import { IArgenpropFunc, ObjectStNu } from '../../types';
 
-const websiteSeachApi = async (location: string): Promise<Record<string, unknown>> => {
+const websiteSeachApi = async (location: string): Promise<ObjectStNu> => {
     /* Returns Argenprop API result recommendations Object after manual search */
     const url = `https://api.sosiva451.com/Ubicaciones/buscar?stringBusqueda=${location}`;
     const apiFetch = axios.get(url, { headers: { 'Accept-Encoding': 'gzip,deflate,compress' } });
-    return (await apiFetch).data[0];
+    return (await apiFetch).data[0].value;
 };
 
-const zoneFormatter = (zoneData): string => {
-    /* Formats the zone type from 'IdZone' -> 'zone' (e.g: IdProvincia -> provincia) */
+const zoneFormatter = (zoneData: ObjectStNu): string => {
+    /* Formats the zone type from 'IdZone' -> 'zone' (e.g: IdSubBarrio -> sub-barrio) */
     const rawZoneType: string = Object.keys(zoneData)[0];
     const zoneType: string = rawZoneType.slice(2).toLowerCase();
-    return zoneType;
+    return zoneType === 'subbarrio' ? 'sub-barrio' : zoneType;
 };
 
-const getArgenprop = async (location: string, query: unknown): Promise<IArgenpropFunc> => {
-    const { value } = await websiteSeachApi(location);
+const getArgenprop = async (location: string, query: ObjectStNu): Promise<IArgenpropFunc> => {
+    const value: ObjectStNu = await websiteSeachApi(location);
     const zoneType: string = zoneFormatter(value);
 
-    return [{ location: 'TODO' }];
+    return [{ location: zoneType }];
 };
 
 export default getArgenprop;

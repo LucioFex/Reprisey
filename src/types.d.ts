@@ -1,9 +1,9 @@
-interface IRentalsDefault {
+export interface IRentalsDefault {
     description: string;
     availableWebsites: string[];
 }
 
-interface IArgenpropData {
+export interface IArgenpropData {
     location?: string;
     description?: string;
     imgs?: string[];
@@ -15,6 +15,6 @@ interface IArgenpropData {
     bedrooms?: number;
 }
 
-type IArgenpropFunc = IArgenpropData[] | unknown;
+export type IArgenpropFunc = IArgenpropData[] | undefined;
 
-export { IRentalsDefault, IArgenpropData, IArgenpropFunc };
+export type ObjectStNu = Record<string, string | number> | undefined;

@@ -15,6 +15,4 @@ export interface IArgenpropData {
     bedrooms?: number;
 }
 
-export type IArgenpropFunc = IArgenpropData[] | undefined;
-
 export type ObjectStNu = Record<string, string | number> | undefined;

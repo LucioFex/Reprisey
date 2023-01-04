@@ -54,7 +54,10 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     const costs: string[] = $('.card__price').text().split('+');
     const [price, expenses]: number[] = separateCosts(costs);
 
-    return { price, expenses };
+    const imgRegex = /https(\S+g)/g;
+    const img = $('.card__photos').find('li').html().match(imgRegex)[0];
+
+    return { price, expenses, img };
 };
 
 const organizeRentalsData = (rawHtmlData: string): IArgenpropData[] => {

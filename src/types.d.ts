@@ -6,7 +6,7 @@ export interface IRentalsDefault {
 export interface IArgenpropData {
     location?: string; // remove '?'
     description?: string; // remove '?'
-    img?: string[]; // remove '?'
+    img?: string; // remove '?'
     price?: number; // remove '?'
     expenses?: number; // remove '?'
     environments?: number;

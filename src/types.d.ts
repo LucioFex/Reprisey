@@ -4,11 +4,11 @@ export interface IRentalsDefault {
 }
 
 export interface IArgenpropData {
-    location?: string;
-    description?: string;
-    imgs?: string[];
-    price?: number;
-    expenses?: number;
+    location?: string; // remove '?'
+    description?: string; // remove '?'
+    img?: string[]; // remove '?'
+    price?: number; // remove '?'
+    expenses?: number; // remove '?'
     environments?: number;
     bathrooms?: number;
     antiquity?: number;

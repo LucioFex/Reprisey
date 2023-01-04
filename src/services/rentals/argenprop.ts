@@ -34,6 +34,7 @@ const separateCosts = (costs: string[]): number[] => {
 
     // Filter of the 'Consultar precio' rentals
     if (costs[0].includes('Consultar precio')) throw Error('"Consultar precio" rental');
+    if (costs[1] === undefined) costs[1] = '0'; // Expenses covered
 
     // e.g of processing: '$ 36.333\expenses' -> 36333
     const regex = /(\$ |\$)|(\.)|(\nex(\S+))/g;
@@ -83,7 +84,7 @@ export default getArgenprop;
 // export interface IArgenpropData {
 //     location?: string;
 //     description?: string;
-//     imgs?: string[];
+//     img?: string[];
 //     price?: number;
 //     expenses?: number;
 //     environments?: number;

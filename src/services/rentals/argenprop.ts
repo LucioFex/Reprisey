@@ -29,7 +29,7 @@ const getRentalsInZone = async (zoneType: string, zoneName: string): Promise<str
     return data;
 };
 
-const processRentalData = (data): IArgenpropData => { // TO DO
+const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     /* Object formatting of the different rentals in the search */
     const rentalData: IArgenpropData = {};
     const $ = cheerio.load(data);
@@ -39,26 +39,23 @@ const processRentalData = (data): IArgenpropData => { // TO DO
     // Filter of the 'Consultar precio' rentals
     if (costs[0].includes('Consultar precio')) throw Error('"Consultar precio" rental');
 
-    const [price, expenses]: string[] = [
-        costs[0].trim().slice(2).split('.').join(''), // Done
-        costs[1].trim().slice(1).split('.').join(''), // Need Fix
+    const regex = /(\$ |\$)|(\.)|(\nex(\S+))/g;
+    const [price, expenses]: number[] = [
+        parseFloat(costs[0].trim().replace(regex, '')), // Done
+        parseFloat(costs[1].trim().replace(regex, '')), // Need Fix
     ];
 
-    console.log([price, expenses]);
-
-    return { location: 'dummy info' };
+    return { price, expenses };
 };
 
 const organizeRentalsData = (rawHtmlData: string): IArgenpropData[] => {
     const organizedData: IArgenpropData[] = [];
     const $ = cheerio.load(rawHtmlData);
 
-    $('.listing__item').each((_index, elem) => {
+    $('.listing__item').each((_index: number, elem: cheerio.TagElement) => {
         try {
             organizedData.push(processRentalData(elem));
-        } catch (err) {
-            // console.error('Rental skiped\n', err); // Rental skip
-        }
+        } catch (err) { /* Rental skip */ }
     });
     return organizedData;
 };

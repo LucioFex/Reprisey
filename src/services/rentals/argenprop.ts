@@ -29,21 +29,29 @@ const getRentalsInZone = async (zoneType: string, zoneName: string): Promise<str
     return data;
 };
 
-const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
-    /* Object formatting of the different rentals in the search */
-    const rentalData: IArgenpropData = {};
-    const $ = cheerio.load(data);
-
-    const costs: string[] = $('.card__price').text().split('+');
+const separateCosts = (costs: string[]): number[] => {
+    /* Returns the 'price' and 'expenses' of a rental's cost */
 
     // Filter of the 'Consultar precio' rentals
     if (costs[0].includes('Consultar precio')) throw Error('"Consultar precio" rental');
 
+    // e.g of processing: '$ 36.333\expenses' -> 36333
     const regex = /(\$ |\$)|(\.)|(\nex(\S+))/g;
     const [price, expenses]: number[] = [
-        parseFloat(costs[0].trim().replace(regex, '')), // Done
-        parseFloat(costs[1].trim().replace(regex, '')), // Need Fix
+        parseFloat(costs[0].trim().replace(regex, '')),
+        parseFloat(costs[1].trim().replace(regex, '')),
     ];
+
+    return [price, expenses];
+};
+
+const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
+    /* Object formatting of the different rentals in the search */
+    // const rentalData: IArgenpropData = {};
+    const $ = cheerio.load(data);
+
+    const costs: string[] = $('.card__price').text().split('+');
+    const [price, expenses]: number[] = separateCosts(costs);
 
     return { price, expenses };
 };

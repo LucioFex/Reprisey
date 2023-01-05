@@ -39,30 +39,33 @@ const separateCosts = (costs: string[]): number[] => {
     // e.g of processing: '$ 36.333\expenses' -> 36333
     const regex = /(\$ |\$)|(\.)|(\nex(\S+))/g;
     const [price, expenses]: number[] = [
-        parseFloat(costs[0].trim().replace(regex, '')),
-        parseFloat(costs[1].trim().replace(regex, '')),
+        parseFloat(costs[0].replace(regex, '')),
+        parseFloat(costs[1].replace(regex, '')),
     ];
 
     return [price, expenses];
 };
 
-const getRentalFeatures = (features): IArgenpropRentalFeats => {
-    // TO DO: Parse strings and numbers
-    const rentalFeatures: IArgenpropRentalFeats = {
-        squareMeters: features.find('.icono-superficie_cubierta').next().text().trim(),
-        bedrooms: features.find('.icono-cantidad_dormitorios').next().text().trim(),
-        antiquity: features.find('.icono-antiguedad').next().text().trim(),
-        bathrooms: features.find('.icono-cantidad_banos').next().text().trim(),
-        status: features.find('.icono-estado_propiedad').next().text().trim(),
-        orientation: features.find('.icono-orientacion').next().text().trim(),
-        environments: features.find('.icono-cantidad_ambientes').next().text().trim(),
+const getRentalFeatures = (feats): IArgenpropRentalFeats => {
+    /* Web scrapping of the rental's features, like ambiences, bedrooms, etc... */
+    const regex = /\d+/g; // to only the numbers
+    const rentalFeats: IArgenpropRentalFeats = {
+        squareMeters: parseFloat(feats.find('.icono-superficie_cubierta').next().text().match(regex)),
+        bedrooms: parseFloat(feats.find('.icono-cantidad_dormitorios').next().text().match(regex)),
+        antiquity: parseFloat(feats.find('.icono-antiguedad').next().text().match(regex)),
+        bathrooms: parseFloat(feats.find('.icono-cantidad_banos').next().text().match(regex)),
+        environments: parseFloat(feats.find('.icono-cantidad_ambientes').next().text().match(regex)),
+        status: feats.find('.icono-estado_propiedad').next().text().trim(),
+        orientation: feats.find('.icono-orientacion').next().text().trim(),
     };
 
-    for (const feat of Object.keys(rentalFeatures)) {
-        if (rentalFeatures[feat] === '') rentalFeatures[feat] = null;
-    }
+    // For each feature that's empty, it will return null
+    Object.keys(rentalFeats).forEach((feature) => {
+        const feat: string | number = rentalFeats[feature];
+        if (feat === '' || (typeof feat === 'number' && isNaN(feat))) delete rentalFeats[feature];
+    });
 
-    return rentalFeatures;
+    return rentalFeats;
 };
 
 const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
@@ -79,24 +82,17 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     const imgRegex = /https(\S+\.jpg)/g;
     const img = $('.card__photos').find('li').html().match(imgRegex)[0];
 
-    const features = $('.card__main-features');
-    const {
-        squareMeters,
-        bedrooms,
-        antiquity,
-        bathrooms,
-        status,
-        orientation,
-        environments,
-    }: IArgenpropRentalFeats = getRentalFeatures(features);
+    const rawFeatures = $('.card__main-features');
+    const features: IArgenpropRentalFeats = getRentalFeatures(rawFeatures);
 
-    return {
+    return { // Rental data
         url,
         location,
         description,
-        img,
         price,
         expenses,
+        img,
+        ...features, // bathrooms, environments, etc...
     };
 };
 
@@ -124,13 +120,3 @@ const getArgenprop = async (location: string, filters: ObjectStNu): Promise<IArg
 };
 
 export default getArgenprop;
-
-// export interface IArgenpropData { TO DO
-//     environments?: number;
-//     bathrooms?: number;
-//     antiquity?: number;
-//     bedrooms?: number;
-//     squareMeters?: number;
-//     status?: string;
-//     orientation?: string;
-// }

@@ -17,3 +17,13 @@ export interface IArgenpropData {
 }
 
 export type ObjectStNu = Record<string, string | number> | undefined;
+
+export interface IArgenpropRentalFeats {
+    squareMeters: number | null;
+    bedrooms: number | null;
+    antiquity: number | null;
+    bathrooms: number | null;
+    status: string | null;
+    orientation: string | null;
+    environments: number | null;
+}

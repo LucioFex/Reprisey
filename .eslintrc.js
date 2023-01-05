@@ -29,5 +29,6 @@ module.exports = {
         'import/extensions': 'off',
         '@typescript-eslint/indent': 'off',
         'react/jsx-filename-extension': 'off',
+        'no-restricted-syntax': 'off'
     },
 };

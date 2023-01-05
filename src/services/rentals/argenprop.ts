@@ -1,6 +1,6 @@
 import cheerio from 'cheerio';
 import axios from 'axios';
-import { IArgenpropData, ObjectStNu } from '../../types';
+import { IArgenpropData, ObjectStNu, IArgenpropRentalFeats } from '../../types';
 
 const websiteSeachApi = async (location: string): Promise<ObjectStNu> => {
     /* Returns Argenprop API result recommendations Object after manual search */
@@ -46,6 +46,25 @@ const separateCosts = (costs: string[]): number[] => {
     return [price, expenses];
 };
 
+const getRentalFeatures = (features): IArgenpropRentalFeats => {
+    // TO DO: Parse strings and numbers
+    const rentalFeatures: IArgenpropRentalFeats = {
+        squareMeters: features.find('.icono-superficie_cubierta').next().text().trim(),
+        bedrooms: features.find('.icono-cantidad_dormitorios').next().text().trim(),
+        antiquity: features.find('.icono-antiguedad').next().text().trim(),
+        bathrooms: features.find('.icono-cantidad_banos').next().text().trim(),
+        status: features.find('.icono-estado_propiedad').next().text().trim(),
+        orientation: features.find('.icono-orientacion').next().text().trim(),
+        environments: features.find('.icono-cantidad_ambientes').next().text().trim(),
+    };
+
+    for (const feat of Object.keys(rentalFeatures)) {
+        if (rentalFeatures[feat] === '') rentalFeatures[feat] = null;
+    }
+
+    return rentalFeatures;
+};
+
 const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     /* Object formatting of the different rentals in the search */
     const $ = cheerio.load(data);
@@ -59,6 +78,17 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
 
     const imgRegex = /https(\S+\.jpg)/g;
     const img = $('.card__photos').find('li').html().match(imgRegex)[0];
+
+    const features = $('.card__main-features');
+    const {
+        squareMeters,
+        bedrooms,
+        antiquity,
+        bathrooms,
+        status,
+        orientation,
+        environments,
+    }: IArgenpropRentalFeats = getRentalFeatures(features);
 
     return {
         url,
@@ -100,4 +130,7 @@ export default getArgenprop;
 //     bathrooms?: number;
 //     antiquity?: number;
 //     bedrooms?: number;
+//     squareMeters?: number;
+//     status?: string;
+//     orientation?: string;
 // }

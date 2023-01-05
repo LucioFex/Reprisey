@@ -16,5 +16,6 @@ app.use(express.json());
 app.use('/', router);
 
 app.listen(app.get('port'), () => {
+    // eslint-disable-next-line no-console
     console.log('App running in the port:', app.get('port'));
 });

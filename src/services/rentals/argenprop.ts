@@ -52,6 +52,7 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
 
     const url = `https://www.argenprop.com${$('.card').attr('href')}`;
     const location: string = $('.card__address').html().trim();
+    const description: string = $('.card__title').text().trim();
 
     const costs: string[] = $('.card__price').text().split('+');
     const [price, expenses]: number[] = separateCosts(costs);
@@ -62,13 +63,15 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     return {
         url,
         location,
+        description,
+        img,
         price,
         expenses,
-        img,
     };
 };
 
 const organizeRentalsData = (rawHtmlData: string): IArgenpropData[] => {
+    /* Returns all the fetch rentals (without filters) */
     const organizedData: IArgenpropData[] = [];
     const $ = cheerio.load(rawHtmlData);
 
@@ -92,12 +95,9 @@ const getArgenprop = async (location: string, filters: ObjectStNu): Promise<IArg
 
 export default getArgenprop;
 
-// export interface IArgenpropData {
-//     url: string -
-//     location: string; -
-//     description: string; -
+// export interface IArgenpropData { TO DO
 //     environments?: number;
 //     bathrooms?: number;
 //     antiquity?: number;
 //     bedrooms?: number;
-// };
+// }

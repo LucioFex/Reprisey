@@ -48,16 +48,24 @@ const separateCosts = (costs: string[]): number[] => {
 
 const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     /* Object formatting of the different rentals in the search */
-    // const rentalData: IArgenpropData = {};
     const $ = cheerio.load(data);
+
+    const url = `https://www.argenprop.com${$('.card').attr('href')}`;
+    const location: string = $('.card__address').html().trim();
 
     const costs: string[] = $('.card__price').text().split('+');
     const [price, expenses]: number[] = separateCosts(costs);
 
-    const imgRegex = /https(\S+g)/g;
+    const imgRegex = /https(\S+\.jpg)/g;
     const img = $('.card__photos').find('li').html().match(imgRegex)[0];
 
-    return { price, expenses, img };
+    return {
+        url,
+        location,
+        price,
+        expenses,
+        img,
+    };
 };
 
 const organizeRentalsData = (rawHtmlData: string): IArgenpropData[] => {
@@ -85,13 +93,11 @@ const getArgenprop = async (location: string, filters: ObjectStNu): Promise<IArg
 export default getArgenprop;
 
 // export interface IArgenpropData {
-//     location?: string;
-//     description?: string;
-//     img?: string[];
-//     price?: number;
-//     expenses?: number;
+//     url: string -
+//     location: string; -
+//     description: string; -
 //     environments?: number;
 //     bathrooms?: number;
 //     antiquity?: number;
 //     bedrooms?: number;
-// }
+// };

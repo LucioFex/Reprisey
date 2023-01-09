@@ -1,6 +1,7 @@
 import cheerio from 'cheerio';
 import axios from 'axios';
 import { IArgenpropData, ObjectStNu, IArgenpropRentalFeats } from '../../types';
+const dolarValue: number = 350 // TODO: 'dolarValue' normal or blue with web scraping
 
 const websiteSeachApi = async (location: string): Promise<ObjectStNu> => {
     /* Returns Argenprop API result recommendations Object after manual search */
@@ -22,7 +23,8 @@ const zoneFormatter = (zoneData: ObjectStNu): string[] => {
 
 const getRentalsInZone = async (zoneType: string, zoneName: string): Promise<string> => {
     /* Fetch of rentals in the zone selected */
-    const url = `https://www.argenprop.com/departamento-alquiler-${zoneType}-${zoneName}`;
+    const urlBase = 'https://www.argenprop.com/departamento-alquiler';
+    const url = `${urlBase}-${zoneType}-${zoneName}-pagina-1`;
     const fetchDom = await axios.get(url, { headers: { 'Accept-Encoding': 'gzip,deflate,compress' } });
 
     const { data }: { data: string } = fetchDom;
@@ -37,9 +39,12 @@ const separateCosts = (costs: string[]): number[] => {
     if (costs[1] === undefined) costs[1] = '0'; // Expenses covered
 
     // e.g of processing: '$ 36.333\expenses' -> 36333
-    const regex = /(\$ |\$)|(\.)|(\nex(\S+))/g;
+    const regex = /(\$ |\$|USD |USD)|(\.)|(\nex(\S+))/g;
+    const currency = costs[0].match(/\$|USD/);
+    const multiplier: number = currency[0] === '$' ? 1 : dolarValue;
+
     const [price, expenses]: number[] = [
-        parseFloat(costs[0].replace(regex, '')),
+        parseFloat(costs[0].replace(regex, '')) * multiplier,
         parseFloat(costs[1].replace(regex, '')),
     ];
 

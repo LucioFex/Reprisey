@@ -116,10 +116,14 @@ const organizeRentalsData = (rawHtmlData: string): IData[] => {
     return organizedData;
 };
 
-// const dataFilter = (rental: IData, filters: IArgenpropFilter): boolean => {
-    
-//     return true;
-// };
+const dataFilter = (rental: IData, filters: IFilters): boolean => { // Need refactor
+    if (rental.price < filters.min_price && filters.min_price !== undefined) return false;
+    if (rental.price > filters.max_price && filters.max_price !== undefined) return false;
+    if (rental.expenses < filters.min_expenses && filters.min_expenses !== undefined) return false;
+    if (rental.expenses > filters.max_expenses && filters.max_expenses !== undefined) return false;
+    if (rental.environments < filters.environments && filters.environments !== undefined) return false;
+    return true;
+};
 
 const getArgenprop = async (location: string, filters: IFilters): Promise<IData[]> => {
     const value: ObjectStNu = await websiteSeachApi(location);
@@ -127,9 +131,9 @@ const getArgenprop = async (location: string, filters: IFilters): Promise<IData[
 
     const rawHtmlData: string = await getRentalsInZone(zoneType, zoneName);
     const fullData: IData[] = organizeRentalsData(rawHtmlData);
-    // const resultData: IData[] = fullData.filter((rental) => dataFilter(rental, filters));
+    const resultData: IData[] = fullData.filter((rental) => dataFilter(rental, filters));
 
-    return fullData;
+    return resultData;
 };
 
 export default getArgenprop;

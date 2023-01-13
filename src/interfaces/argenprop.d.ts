@@ -10,10 +10,10 @@ export interface IFeats {
 
 export interface IFilters {
     order?: 'featured' | 'expensive' | 'cheapest' | 'newest';
-    minPrice?: number;
-    maxPrice?: number;
-    minExpenses?: number;
-    maxExpenses?: number;
+    min_price?: number;
+    max_price?: number;
+    min_expenses?: number;
+    max_expenses?: number;
     environments?: number;
 }
 

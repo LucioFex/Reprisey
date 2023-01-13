@@ -1,6 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { ObjectStNu } from '../interfaces/types';
-import { IFeats as IArgenpropData } from '../interfaces/argenprop';
+import { IFeats as IArgenpropData, IFilters as IArgenpropFilters } from '../interfaces/argenprop';
 import rentalsDefault from '../services/rentals/rentals';
 import getArgenprop from '../services/rentals/argenprop';
 
@@ -12,7 +11,7 @@ router.get('/', (req: Request, res: Response) => res.status(200).json(rentalsDef
 router.get('/argenprop/:location', async (req: Request, res: Response) => {
     // Rental location and filters (query)
     const { location } = req.params;
-    const query: ObjectStNu = req.query as ObjectStNu;
+    const query: IArgenpropFilters = req.query as IArgenpropFilters;
 
     try {
         const argenpropData: IArgenpropData[] | undefined = await getArgenprop(location, query);

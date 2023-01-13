@@ -1,7 +1,9 @@
 import cheerio from 'cheerio';
 import axios from 'axios';
-import { IArgenpropData, ObjectStNu, IArgenpropRentalFeats } from '../../types';
-const dolarValue: number = 350 // TODO: 'dolarValue' normal or blue with web scraping
+import { ObjectStNu } from '../../interfaces/types';
+import { IData, IFeats, IFilters } from '../../interfaces/argenprop';
+
+const dolarValue = 350; // TODO: 'dolarValue' normal or blue with web scraping
 
 const websiteSeachApi = async (location: string): Promise<ObjectStNu> => {
     /* Returns Argenprop API result recommendations Object after manual search */
@@ -51,10 +53,10 @@ const separateCosts = (costs: string[]): number[] => {
     return [price, expenses];
 };
 
-const getRentalFeatures = (feats): IArgenpropRentalFeats => {
+const getRentalFeatures = (feats): IFeats => {
     /* Web scrapping of the rental's features, like ambiences, bedrooms, etc... */
     const regex = /\d+/g; // to only the numbers
-    const rentalFeats: IArgenpropRentalFeats = {
+    const rentalFeats: IFeats = {
         squareMeters: parseFloat(feats.find('.icono-superficie_cubierta').next().text().match(regex)),
         bedrooms: parseFloat(feats.find('.icono-cantidad_dormitorios').next().text().match(regex)),
         antiquity: parseFloat(feats.find('.icono-antiguedad').next().text().match(regex)),
@@ -73,7 +75,7 @@ const getRentalFeatures = (feats): IArgenpropRentalFeats => {
     return rentalFeats;
 };
 
-const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
+const processRentalData = (data: cheerio.TagElement): IData => {
     /* Object formatting of the different rentals in the search */
     const $ = cheerio.load(data);
 
@@ -88,7 +90,7 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     const img = $('.card__photos').find('li').html().match(imgRegex)[0];
 
     const rawFeatures = $('.card__main-features');
-    const features: IArgenpropRentalFeats = getRentalFeatures(rawFeatures);
+    const features: IFeats = getRentalFeatures(rawFeatures);
 
     return { // Rental data
         url,
@@ -101,9 +103,9 @@ const processRentalData = (data: cheerio.TagElement): IArgenpropData => {
     };
 };
 
-const organizeRentalsData = (rawHtmlData: string): IArgenpropData[] => {
+const organizeRentalsData = (rawHtmlData: string): IData[] => {
     /* Returns all the fetch rentals (without filters) */
-    const organizedData: IArgenpropData[] = [];
+    const organizedData: IData[] = [];
     const $ = cheerio.load(rawHtmlData);
 
     $('.listing__item').each((_index: number, elem: cheerio.TagElement) => {
@@ -114,14 +116,20 @@ const organizeRentalsData = (rawHtmlData: string): IArgenpropData[] => {
     return organizedData;
 };
 
-const getArgenprop = async (location: string, filters: ObjectStNu): Promise<IArgenpropData[]> => {
+// const dataFilter = (rental: IData, filters: IArgenpropFilter): boolean => {
+    
+//     return true;
+// };
+
+const getArgenprop = async (location: string, filters: IFilters): Promise<IData[]> => {
     const value: ObjectStNu = await websiteSeachApi(location);
     const [zoneType, zoneName]: string[] = zoneFormatter(value);
 
     const rawHtmlData: string = await getRentalsInZone(zoneType, zoneName);
-    const organizedData: IArgenpropData[] = organizeRentalsData(rawHtmlData);
+    const fullData: IData[] = organizeRentalsData(rawHtmlData);
+    // const resultData: IData[] = fullData.filter((rental) => dataFilter(rental, filters));
 
-    return organizedData;
+    return fullData;
 };
 
 export default getArgenprop;

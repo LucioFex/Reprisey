@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
-import { IArgenpropData, ObjectStNu } from '../types';
+import { ObjectStNu } from '../interfaces/types';
+import { IFeats as IArgenpropData } from '../interfaces/argenprop';
 import rentalsDefault from '../services/rentals/rentals';
 import argenpropSearch from '../services/rentals/argenprop';
 

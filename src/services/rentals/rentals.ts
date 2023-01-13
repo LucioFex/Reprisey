@@ -1,4 +1,4 @@
-import { IRentalsDefault } from '../../types';
+import { IRentalsDefault } from '../../interfaces/types';
 
 const rentalsDefault: IRentalsDefault = {
     description: 'List of website keywords available for web scraping',

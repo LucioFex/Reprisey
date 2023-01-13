@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { ObjectStNu } from '../interfaces/types';
 import { IFeats as IArgenpropData } from '../interfaces/argenprop';
 import rentalsDefault from '../services/rentals/rentals';
-import argenpropSearch from '../services/rentals/argenprop';
+import getArgenprop from '../services/rentals/argenprop';
 
 const router: Router = Router({ strict: true });
 
@@ -15,12 +15,12 @@ router.get('/argenprop/:location', async (req: Request, res: Response) => {
     const query: ObjectStNu = req.query as ObjectStNu;
 
     try {
-        const argenpropData: IArgenpropData[] | undefined = await argenpropSearch(location, query);
+        const argenpropData: IArgenpropData[] | undefined = await getArgenprop(location, query);
         res.status(200).json(argenpropData);
     } catch (err: unknown) {
         // eslint-disable-next-line no-console
         console.error(err);
-        res.status(404).json({ err: 'Can\' access to Argenprop API' });
+        res.status(404).json({ err: 'Can\'t access to Argenprop API' });
     }
 });
 
